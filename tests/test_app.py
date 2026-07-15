@@ -38,32 +38,21 @@ def test_auth_and_url_lifecycle(client, flask_app):
     response_dup = client.post('/api/auth/register', json=reg_data)
     assert response_dup.status_code == 409
 
-    # 3. Verify Email Verification Required for Login
+    # 3. Direct Login (no email verification required)
     login_data = {
         'email': 'test@example.com',
         'password': 'SecurePassword123!'
     }
-    response_login_unverified = client.post('/api/auth/login', json=login_data)
-    assert response_login_unverified.status_code == 403 # Forbidden (not verified)
-
-    # 4. Email Verification
-    with flask_app.app_context():
-        user = User.query.filter_by(email='test@example.com').first()
-        assert user is not None
-        assert not user.is_verified
-        
-        verification = EmailVerification.query.filter_by(user_id=user.id).first()
-        assert verification is not None
-        token = verification.token
-
-    response_verify = client.post('/api/auth/verify-email', json={'token': token})
-    assert response_verify.status_code == 200
-    
-    # 5. Login
     response_login = client.post('/api/auth/login', json=login_data)
     assert response_login.status_code == 200
     token = response_login.json['access_token']
     assert token is not None
+
+    # 4. Verify User is Verified by default in Database
+    with flask_app.app_context():
+        user = User.query.filter_by(email='test@example.com').first()
+        assert user is not None
+        assert user.is_verified
 
     headers = {'Authorization': f'Bearer {token}'}
 

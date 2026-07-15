@@ -42,7 +42,7 @@ def register():
             first_name=first_name,
             last_name=last_name,
             email=email,
-            is_verified=False
+            is_verified=True
         )
         new_user.set_password(password)
         db.session.add(new_user)
@@ -53,11 +53,11 @@ def register():
         db.session.add(verification)
         db.session.commit()
 
-        # Send Verification Email
-        send_verification_email(email, first_name, verification.token)
+        # Send Verification Email (Disabled as verification is skipped)
+        # send_verification_email(email, first_name, verification.token)
 
         return jsonify({
-            'message': 'Registration successful! Please check your email to verify your account.'
+            'message': 'Registration successful! You can now log in.'
         }), 201
 
     except Exception as e:
@@ -111,8 +111,8 @@ def login():
     if not user or not user.check_password(password):
         return jsonify({'error': 'Invalid email or password.'}), 401
 
-    if not user.is_verified:
-        return jsonify({'error': 'Email not verified. Please verify your email first.'}), 403
+    # if not user.is_verified:
+    #     return jsonify({'error': 'Email not verified. Please verify your email first.'}), 403
 
     # Generate JWT token
     # If remember me is set, make it expire in 30 days, otherwise 2 hours

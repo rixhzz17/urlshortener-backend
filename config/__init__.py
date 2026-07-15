@@ -11,7 +11,7 @@ class Config:
     
     # SQLAlchemy configuration
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///../instance/linkly.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False  
     
     # JWT configuration
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=2)
