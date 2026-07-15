@@ -1,0 +1,16 @@
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-JWT-Extended==4.6.0
+Flask-Mail==0.10.0
+Flask-CORS==4.0.1
+Flask-Migrate==4.0.7
+Flask-Bcrypt==1.0.1
+python-dotenv==1.0.1
+qrcode==8.0
+Pillow==10.3.0
+pymongo==4.7.2
+pytest==8.2.1
+cryptography==42.0.7
+werkzeug==3.0.3
+email-validator==2.1.1
+gunicorn==22.0.0
