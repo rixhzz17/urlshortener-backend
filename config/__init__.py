@@ -50,7 +50,7 @@ class ProductionConfig(Config):
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     MONGO_URI = os.getenv('MONGO_URI')
-    MAIL_SUPPRESS_SEND = False
+    MAIL_SUPPRESS_SEND = True
 
 config_by_name = {
     'development': DevelopmentConfig,
