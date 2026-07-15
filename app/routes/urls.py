@@ -47,7 +47,7 @@ def create_url():
             # Handle ISO string like "2026-07-14T00:00:00"
             # Strip timezone if present
             clean_date = re.sub(r'\.\d+Z$|Z$', '', expires_at_str)
-            expires_at = datetime.fromisoformat(clean_date)
+            expires_at = datetime.fromisoformat(clean_date).replace(tzinfo=None)
             if expires_at < datetime.utcnow():
                 return jsonify({'error': 'Expiration date must be in the future.'}), 400
         except ValueError:
@@ -152,9 +152,9 @@ def list_urls():
     elif sort == 'clicks_desc':
         url_list.sort(key=lambda x: x['clicks'], reverse=True)
     elif sort == 'title_asc':
-        url_list.sort(key=lambda x: x['title'].lower())
+        url_list.sort(key=lambda x: (x['title'] or '').lower())
     elif sort == 'title_desc':
-        url_list.sort(key=lambda x: x['title'].lower(), reverse=True)
+        url_list.sort(key=lambda x: (x['title'] or '').lower(), reverse=True)
 
     return jsonify({'urls': url_list}), 200
 
@@ -186,7 +186,7 @@ def update_url(url_id):
         else:
             try:
                 clean_date = re.sub(r'\.\d+Z$|Z$', '', expires_at_str)
-                expires_at = datetime.fromisoformat(clean_date)
+                expires_at = datetime.fromisoformat(clean_date).replace(tzinfo=None)
                 if expires_at < datetime.utcnow():
                     return jsonify({'error': 'Expiration date must be in the future.'}), 400
                 url_entry.expires_at = expires_at
