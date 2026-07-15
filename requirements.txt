@@ -14,3 +14,4 @@ cryptography==42.0.7
 werkzeug==3.0.3
 email-validator==2.1.1
 gunicorn==22.0.0
+psycopg2-binary==2.9.10
