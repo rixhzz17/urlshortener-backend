@@ -23,7 +23,6 @@ def get_analytics_summary():
     # Get list of user short codes
     user_urls = URL.query.filter_by(user_id=int(user_id)).all()
     short_codes = [url.short_code for url in user_urls]
-    
     # Initialize empty analytics structure in case MongoDB is missing or user has no URLs
     empty_res = {
         'total_urls': total_urls,
@@ -120,7 +119,7 @@ def get_analytics_summary():
                 '_id': {
                     'year': {'$year': '$timestamp'},
                     'month': {'$month': '$timestamp'},
-                    'day': {'$day': '$timestamp'}
+                    'day': {'$dayOfMonth': '$timestamp'}
                 },
                 'count': {'$sum': 1}
             }},
@@ -214,7 +213,7 @@ def get_url_analytics(url_id):
                 '_id': {
                     'year': {'$year': '$timestamp'},
                     'month': {'$month': '$timestamp'},
-                    'day': {'$day': '$timestamp'}
+                    'day': {'$dayOfMonth': '$timestamp'}
                 },
                 'count': {'$sum': 1}
             }},

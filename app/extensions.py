@@ -19,17 +19,33 @@ mongo_db = None
 
 def init_mongodb(app):
     global mongo_client, mongo_db
-    mongo_uri = app.config.get('MONGO_URI')
-    if mongo_uri:
-        try:
-            mongo_client = MongoClient(mongo_uri, serverSelectionTimeoutMS=2000)
-            # Test connection
-            mongo_client.server_info()
-            mongo_db = mongo_client.get_default_database()
-            app.logger.info("Successfully connected to MongoDB!")
-        except Exception as e:
-            app.logger.error(f"Failed to connect to MongoDB: {e}")
-            mongo_client = None
-            mongo_db = None
-    else:
-        app.logger.warning("MONGO_URI not configured. MongoDB functionality will be disabled.")
+
+    mongo_uri = app.config.get("MONGO_URI")
+
+    app.logger.info("=" * 60)
+    app.logger.info(f"MONGO_URI = {mongo_uri}")
+    app.logger.info("=" * 60)
+
+    if not mongo_uri:
+        app.logger.error("MONGO_URI NOT FOUND")
+        mongo_client = None
+        mongo_db = None
+        return
+
+    try:
+        mongo_client = MongoClient(
+            mongo_uri,
+            serverSelectionTimeoutMS=5000
+        )
+
+        # Test MongoDB connection
+        mongo_client.admin.command("ping")
+
+        mongo_db = mongo_client.get_database()
+
+        app.logger.info("✅ MongoDB Connected Successfully!")
+
+    except Exception as e:
+        app.logger.error(f"❌ MongoDB Connection Error: {e}")
+        mongo_client = None
+        mongo_db = None
